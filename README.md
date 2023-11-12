@@ -1,2 +1,3 @@
 # axios-typescript
-implement axios in TypeScript
+
+build my own axios in TypeScript
