@@ -53,3 +53,7 @@ export interface Axios {
   put(url: string, data?: any, config?: AxiosRequestConfig): AxiosPromise
   patch(url: string, data?: any, config?: AxiosRequestConfig): AxiosPromise
 }
+
+export interface AxiosInstance extends Axios {
+  (config: AxiosRequestConfig): AxiosPromise
+}
