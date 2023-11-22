@@ -2,7 +2,17 @@ import { AxiosPromise, AxiosRequestConfig, Method } from '../types'
 import dispatchRequest from './dispatchRequest'
 
 export default class Axios {
-  request(config: AxiosRequestConfig): AxiosPromise {
+  // example1 : axios('/user/12345')
+  // example2 : axios({ url: '/user/12345' })
+  request(url: any, config?: any): AxiosPromise {
+    if (typeof url === 'string') {
+      if (!config) {
+        config = {}
+      }
+      config.url = url
+    } else {
+      config = url
+    }
     return dispatchRequest(config)
   }
 
