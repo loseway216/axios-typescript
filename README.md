@@ -13,4 +13,10 @@ build my own axios in TypeScript
 - [x] With credentials
 - [x] XSRF protection
 - [x] Upload/download progress
+- [x] Authorization header
+- [x] Validate status
+- [x] Params serializer
+- [x] Base URL
+- [x] axios.all/axios.spread
+- [x] axios.Axios
 - [x] Unit Tests
