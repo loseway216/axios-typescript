@@ -10,8 +10,8 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
     const {
       data = null,
       url,
-      method = 'get',
-      headers,
+      method,
+      headers = {},
       responseType,
       timeout,
       cancelToken,
@@ -26,11 +26,11 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
 
     const request = new XMLHttpRequest()
 
-    request.open(method.toUpperCase(), url!, true)
+    request.open(method!.toUpperCase(), url!, true)
 
     configureRequest()
 
-    addEventListener()
+    addEvents()
 
     processHeaders()
 
@@ -42,15 +42,17 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
       if (responseType) {
         request.responseType = responseType
       }
+
       if (timeout) {
         request.timeout = timeout
       }
+
       if (withCredentials) {
         request.withCredentials = withCredentials
       }
     }
 
-    function addEventListener(): void {
+    function addEvents(): void {
       request.onreadystatechange = function handleLoad() {
         if (request.readyState !== 4) {
           return
@@ -61,7 +63,8 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
         }
 
         const responseHeaders = parseHeaders(request.getAllResponseHeaders())
-        const responseData = responseType !== 'text' ? request.response : request.responseText
+        const responseData =
+          responseType && responseType !== 'text' ? request.response : request.responseText
         const response: AxiosResponse = {
           data: responseData,
           status: request.status,
@@ -70,7 +73,6 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
           config,
           request
         }
-
         handleResponse(response)
       }
 
@@ -118,10 +120,14 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
 
     function processCancel(): void {
       if (cancelToken) {
-        cancelToken.promise.then(reason => {
-          request.abort()
-          reject(reason)
-        })
+        cancelToken.promise
+          .then(reason => {
+            request.abort()
+            reject(reason)
+          })
+          .catch(() => {
+            // do nothing
+          })
       }
     }
 
